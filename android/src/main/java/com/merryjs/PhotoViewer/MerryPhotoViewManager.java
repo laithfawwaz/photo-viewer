@@ -132,6 +132,11 @@ public class MerryPhotoViewManager extends SimpleViewManager<MerryPhotoView> {
         merryPhotoView.setEnableCollect(prop);
     }
 
+    @ReactProp(name = "enableDownload", defaultBoolean = false)
+    public void setEnableDownload(MerryPhotoView merryPhotoView, Boolean prop) {
+        merryPhotoView.setEnableDownload(prop);
+    }
+
     @ReactProp(name = "DismissOnCollect", defaultBoolean = false)
     public void setDismissOnCollect(MerryPhotoView merryPhotoView, Boolean prop) {
         merryPhotoView.setDismissOnCollect(prop);
@@ -157,6 +162,7 @@ public class MerryPhotoViewManager extends SimpleViewManager<MerryPhotoView> {
                 .put("onCollect", MapBuilder.of("registrationName", "onCollect"))
                 .put("onUncollect", MapBuilder.of("registrationName", "onUncollect"))
                 .put("onSimilarImages", MapBuilder.of("registrationName", "onSimilarImages"))
+                .put("onDownload", MapBuilder.of("registrationName", "onDownload"))
                 .build();
     }
 }

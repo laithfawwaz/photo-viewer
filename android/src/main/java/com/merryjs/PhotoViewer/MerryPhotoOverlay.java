@@ -30,10 +30,12 @@ public class MerryPhotoOverlay extends RelativeLayout {
     private ImageView tvClose;
     private ImageView ivCollect;
     private ImageView ivSimilar;
+    private ImageView ivDownload;
     private ImageViewer imageViewer;
     private String sharingText;
     private List<MerryPhotoOverlayListener> merryPhotoOverlayListeners = new ArrayList<>();
     private boolean isEnabledCollect;
+    private boolean isEnabledDownload;
     private boolean isDismissOnCollect;
     private boolean isEnableSimilarImages;
     private boolean isShowProjectDetailButton;
@@ -103,6 +105,15 @@ public class MerryPhotoOverlay extends RelativeLayout {
         this.isEnabledCollect = isEnabledCollect;
     }
 
+    public void setEnableDownload(Boolean isEnabledDownload) {
+        if (isEnabledDownload) {
+            ivDownload.setVisibility(View.VISIBLE);
+        } else {
+            ivDownload.setVisibility(View.GONE);
+        }
+        this.isEnabledDownload = isEnabledDownload;
+    }
+
     public void setDismissOnCollect(Boolean isDismissOnCollect) {
         this.isDismissOnCollect = isDismissOnCollect;
     }
@@ -143,11 +154,11 @@ public class MerryPhotoOverlay extends RelativeLayout {
 
         isCollect = false;
 
-        tvTitlePager = (TextView) view.findViewById(R.id.tvTitlePager);
-        tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-        tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+        tvTitlePager = view.findViewById(R.id.tvTitlePager);
+        tvTitle = view.findViewById(R.id.tvTitle);
+        tvDescription = view.findViewById(R.id.tvDescription);
 
-        tvShare = (ImageView) view.findViewById(R.id.btnShare);
+        tvShare = view.findViewById(R.id.btnShare);
         tvShare.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,7 +166,7 @@ public class MerryPhotoOverlay extends RelativeLayout {
                 sendShareIntent();
             }
         });
-        tvClose = (ImageView) view.findViewById(R.id.btnClose);
+        tvClose = view.findViewById(R.id.btnClose);
         tvClose.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -164,7 +175,7 @@ public class MerryPhotoOverlay extends RelativeLayout {
             }
         });
 
-        ivCollect = (ImageView) view.findViewById(R.id.ivCollect);
+        ivCollect = view.findViewById(R.id.ivCollect);
         ivCollect.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,12 +191,20 @@ public class MerryPhotoOverlay extends RelativeLayout {
             }
         });
 
-        ivSimilar = (ImageView) view.findViewById(R.id.ivSimilar);
+        ivSimilar = view.findViewById(R.id.ivSimilar);
         ivSimilar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 imageViewer.onDismiss();
                 notifyOnSimilarClicked();
+            }
+        });
+
+        ivDownload = view.findViewById(R.id.ivDownload);
+        ivDownload.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifyOnDownloadClicked();
             }
         });
 
@@ -219,6 +238,13 @@ public class MerryPhotoOverlay extends RelativeLayout {
         }
     }
 
+    private void notifyOnDownloadClicked() {
+        for (MerryPhotoOverlayListener merryPhotoOverlayListener :
+                merryPhotoOverlayListeners) {
+            merryPhotoOverlayListener.onDownloadClicked();
+        }
+    }
+
 
     interface MerryPhotoOverlayListener {
 
@@ -229,6 +255,8 @@ public class MerryPhotoOverlay extends RelativeLayout {
         void onUnCollectClicked();
 
         void onSimilarClicked();
+
+        void onDownloadClicked();
 
     }
 }

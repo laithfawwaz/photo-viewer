@@ -3,6 +3,7 @@ package com.merryjs.PhotoViewer;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -29,6 +30,7 @@ public class MerryPhotoView extends View implements ImageViewer.OnImageChangeLis
     protected boolean hideShareButton;
     protected boolean hideCloseButton;
     protected boolean isEnabledCollect;
+    protected boolean isEnabledDownload;
     protected boolean isDismissOnCollect;
     protected boolean isEnableSimilarImages;
     protected boolean isShowProjectDetailButton;
@@ -120,6 +122,7 @@ public class MerryPhotoView extends View implements ImageViewer.OnImageChangeLis
 
         // set overView
         overlayView.setEnableCollect(isEnabledCollect);
+        overlayView.setEnableDownload(isEnabledDownload);
         overlayView.setDismissOnCollect(isDismissOnCollect);
         overlayView.setEnableSimilarImages(isEnableSimilarImages);
 
@@ -166,7 +169,6 @@ public class MerryPhotoView extends View implements ImageViewer.OnImageChangeLis
             summaryColor = merryPhotoData.summaryColor;
         }
         overlayView.setDescriptionTextColor(summaryColor);
-
         overlayView.setIsCollect(merryPhotoData.isCollected);
 
 
@@ -212,6 +214,12 @@ public class MerryPhotoView extends View implements ImageViewer.OnImageChangeLis
     public void onSimilarClicked() {
         WritableMap map = createMerryPhotoDataMap();
         onSimilarImages(map);
+    }
+
+    @Override
+    public void onDownloadClicked() {
+        WritableMap map = createMerryPhotoDataMap();
+        onDownload(map);
     }
 
     /**
@@ -276,6 +284,16 @@ public class MerryPhotoView extends View implements ImageViewer.OnImageChangeLis
         }
     }
 
+    /**
+     * on download
+     */
+    protected void onDownload(WritableMap map) {
+        final Context context = getContext();
+        if (context instanceof ReactContext) {
+            ((ReactContext) context).getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "onDownload", map);
+        }
+    }
+
     //
     private ImageViewer.OnDismissListener getDismissListener() {
         return new ImageViewer.OnDismissListener() {
@@ -308,6 +326,10 @@ public class MerryPhotoView extends View implements ImageViewer.OnImageChangeLis
 
     public void setEnableCollect(Boolean isEnabledCollect) {
         this.isEnabledCollect = isEnabledCollect;
+    }
+
+    public void setEnableDownload(Boolean isEnabledDownload) {
+        this.isEnabledDownload = isEnabledDownload;
     }
 
     public void setDismissOnCollect(Boolean isDismissOnCollect) {
